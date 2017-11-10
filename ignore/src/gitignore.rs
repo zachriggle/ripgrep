@@ -405,6 +405,11 @@ impl GitignoreBuilder {
         if !line.ends_with("\\ ") {
             line = line.trim_right();
         }
+        // Ignoring all files means that ripgrep would do nothing / be a no-op.
+        // Avoid this rule so that other rules may still take effect.
+        if line == "*" {
+            return Ok(self)
+        }
         if line.is_empty() {
             return Ok(self);
         }
